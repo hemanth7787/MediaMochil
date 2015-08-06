@@ -1,3 +1,5 @@
+Remove mutagen and use http://nedbatchelder.com/code/modules/id3reader.html
+
 Fix progress and seeking
 Crash when opening media files without a ID3 tag
 Show time elapsed
@@ -9,3 +11,6 @@ Table
 click select and play
 drag and drop
 
+
+on linux
+module abstaction (like content providers)
