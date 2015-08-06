@@ -1,0 +1,11 @@
+Fix progress and seeking
+Crash when opening media files without a ID3 tag
+Show time elapsed
+Icons and titles
+About page
+
+
+Table
+click select and play
+drag and drop
+
