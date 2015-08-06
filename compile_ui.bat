@@ -1,0 +1,1 @@
+pyside-uic.exe player.ui > mochil_gui.py
