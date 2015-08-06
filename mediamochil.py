@@ -63,25 +63,25 @@ class MainWin(QMainWindow, Ui_MainWindow):
         index = len(self.sources)
 
         for mediafile in files:
-            tag = EasyID3(mediafile)
-            title = tag['title']
-            if title=="":
-                 title = "unknown"
+            title = "unknown"
+            artist, album, year = "", "", ""
+            try:
+                tag = EasyID3(mediafile)
+                title = tag['title'][0]
+                artist = tag['artist'][0]
+                album = tag['album'][0]
+                year = tag['date'][0]
+            except:
+                pass
 
 
-            titleItem = QTableWidgetItem(title[0])
+            titleItem = QTableWidgetItem(title)
             titleItem.setFlags(titleItem.flags() ^ Qt.ItemIsEditable)
-
-            artist = tag['artist']
-            artistItem = QTableWidgetItem(artist[0])
+            artistItem = QTableWidgetItem(artist)
             artistItem.setFlags(artistItem.flags() ^ Qt.ItemIsEditable)
-
-            album = tag['album']
-            albumItem = QTableWidgetItem(album[0])
+            albumItem = QTableWidgetItem(album)
             albumItem.setFlags(albumItem.flags() ^ Qt.ItemIsEditable)
-
-            year = tag['date']
-            yearItem = QTableWidgetItem(year[0])
+            yearItem = QTableWidgetItem(year)
             yearItem.setFlags(yearItem.flags() ^ Qt.ItemIsEditable)
 
             currentRow = self.musicTable.rowCount()
