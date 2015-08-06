@@ -1,7 +1,11 @@
 # MediaMochil
 A media player in Python using Pyglet and Pyside
 
+Alpha version
+
 This is particularly for windows version. It may run on some linux version , but with modification mainly to the "avbin" loading part.
+
+![picture alt](http://i.imgur.com/yiEEcTY.png "Screenshot")
 
 ## Building windows binary
 
