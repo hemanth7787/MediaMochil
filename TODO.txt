@@ -1,10 +1,9 @@
 Remove mutagen and use http://nedbatchelder.com/code/modules/id3reader.html
-
-Fix progress and seeking
-# Crash when opening media files without a ID3 tag
-Show time elapsed
-# Icons and titles
+now playing
 About page
+status bar  -- playing media name etc . .
+volume always shows zero
+shuffle and repeat
 
 
 Table
@@ -13,4 +12,12 @@ drag and drop
 
 
 on linux
-module abstaction (like content providers)
+module abstraction (like content providers)
+
+
+Finished:
+# Icons and titles
+# Crash when opening media files without a ID3 tag
+# seeking
+# Fix progress
+# Show time elapsed

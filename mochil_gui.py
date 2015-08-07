@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Fri Aug 07 00:07:56 2015
+# Created: Sat Aug 08 01:45:06 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,8 @@ from PySide import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(558, 287)
+        MainWindow.setEnabled(True)
+        MainWindow.resize(558, 297)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/res/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -38,7 +39,7 @@ class Ui_MainWindow(object):
         self.musicTable.setRowCount(0)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.horizontalSlider = QtGui.QSlider(self.centralwidget)
-        self.horizontalSlider.setGeometry(QtCore.QRect(10, 200, 541, 19))
+        self.horizontalSlider.setGeometry(QtCore.QRect(10, 200, 441, 19))
         self.horizontalSlider.setOrientation(QtCore.Qt.Horizontal)
         self.horizontalSlider.setObjectName("horizontalSlider")
         self.play = QtGui.QPushButton(self.centralwidget)
@@ -62,8 +63,15 @@ class Ui_MainWindow(object):
         self.next_item = QtGui.QPushButton(self.centralwidget)
         self.next_item.setGeometry(QtCore.QRect(50, 230, 31, 31))
         self.next_item.setObjectName("next_item")
+        self.play_timer = QtGui.QLineEdit(self.centralwidget)
+        self.play_timer.setEnabled(True)
+        self.play_timer.setGeometry(QtCore.QRect(460, 200, 91, 22))
+        self.play_timer.setReadOnly(True)
+        self.play_timer.setObjectName("play_timer")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtGui.QStatusBar(MainWindow)
+        self.statusbar.setStatusTip("")
+        self.statusbar.setAccessibleDescription("")
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
@@ -84,5 +92,6 @@ class Ui_MainWindow(object):
         self.previous.setText(QtGui.QApplication.translate("MainWindow", "<", None, QtGui.QApplication.UnicodeUTF8))
         self.next_item.setToolTip(QtGui.QApplication.translate("MainWindow", "Next", None, QtGui.QApplication.UnicodeUTF8))
         self.next_item.setText(QtGui.QApplication.translate("MainWindow", ">", None, QtGui.QApplication.UnicodeUTF8))
+        self.play_timer.setText(QtGui.QApplication.translate("MainWindow", "00:00 / 00:00", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc

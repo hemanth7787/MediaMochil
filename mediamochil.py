@@ -1,9 +1,9 @@
 import time
+from PySide.QtCore import SIGNAL, Qt, QThread, Signal
+from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication
 
 __author__ = 'hemanth'
 import sys
-from PySide.QtCore import *
-from PySide.QtGui import *
 from mochil_gui import Ui_MainWindow
 import pyglet
 from mutagen.easyid3 import EasyID3
@@ -22,8 +22,8 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.connect(self.musicTable, SIGNAL('cellPressed(int, int)'), self.tableClicked)
 
         self.volume.valueChanged.connect(self.volume_control)
-        self.horizontalSlider.setTickInterval(10)
-        self.horizontalSlider.setSingleStep(1)
+        #self.horizontalSlider.setTickInterval(10)
+        #self.horizontalSlider.setSingleStep(1)
 
         self.connect(self.open, SIGNAL("clicked()"), self.addFiles)
         self.dw_directory = "./"
@@ -34,9 +34,18 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.connect(self.pause, SIGNAL("clicked()"), self.player.pause)
         self.connect(self.play, SIGNAL("clicked()"), self.player.play)
         self.connect(self.next_item, SIGNAL("clicked()"), self.player.next_source)
-        self.worker = DownloadWorker(self.player)
-        self.worker.updateProgress.connect(self.set_progress)
-        #self.worker.start()
+        self.worker = UpdateGui(self.player)
+        self.worker.updateProgress.connect(self.update_ui)
+        self.worker.start()
+
+    def closeEvent(self, event):
+        self.worker.terminate()
+        event.accept()
+        # if maybeSave():
+        #     writeSettings()
+        #     event.accept()
+        # else:
+        #     event.ignore()
 
     def volume_control(self):
         if self.debug:
@@ -60,8 +69,19 @@ class MainWin(QMainWindow, Ui_MainWindow):
         # Convert the 0-1 range into a value in the right range.
         return rightMin + (valueScaled * rightSpan)
 
-    def set_progress(self, progress):
-        print progress
+    def update_ui(self, data_dict):
+        if self.mediaLoad and not self.horizontalSlider.isSliderDown():
+            progress = self.translate(data_dict["time"], 0.00, self.mediaLoad.duration, 0.00, 99.00)
+            self.horizontalSlider.setValue(progress)
+            self.play_timer.setText(self.get_play_timer(data_dict["time"]))
+
+    def get_play_timer(self, pos):
+        play_minute = '{num:02d}'.format(num=(int(pos) / 60))
+        play_seconds = '{num:02d}'.format(num=(int(pos) % 60))
+        duration_minute = '{num:02d}'.format(num=(int(self.mediaLoad.duration) / 60))
+        duration_seconds = '{num:02d}'.format(num=(int(self.mediaLoad.duration) % 60))
+        return "{}:{} / {}:{}".format(play_minute, play_seconds, duration_minute, duration_seconds)
+
     def tableClicked(self, row, column):
         pass
         # oldState = self.mediaObject.state()
@@ -121,15 +141,16 @@ class MainWin(QMainWindow, Ui_MainWindow):
 
 
 
-class DownloadWorker(QThread):
+
+class UpdateGui(QThread):
     """
     Threading to  show a fancy progress
     """
-    updateProgress = Signal(float)
+    updateProgress = Signal(dict)
     #You can do any extra things in this init you need, but for this example
     #nothing else needs to be done expect call the super's init
     def __init__(self,player):
-        QThread.__init__(self)
+        super(UpdateGui, self).__init__()
         self.player = player
 
 
@@ -139,7 +160,10 @@ class DownloadWorker(QThread):
         #Notice this is the same thing you were doing in your progress() function
         while(1):
             time.sleep(1)
-            self.updateProgress.emit(float(self.player.time))
+            self.updateProgress.emit(
+                {
+                    "time": self.player.time
+                })
         return
 
 
