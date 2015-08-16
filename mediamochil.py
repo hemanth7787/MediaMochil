@@ -1,6 +1,7 @@
 import time
 from PySide.QtCore import SIGNAL, Qt, QThread, Signal
-from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication
+from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication, \
+    QMessageBox, qApp
 
 __author__ = 'hemanth'
 import sys
@@ -21,6 +22,11 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.musicTable.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.connect(self.musicTable, SIGNAL('cellPressed(int, int)'), self.tableClicked)
 
+        self.actionAbout.triggered.connect(self.about_mm)
+        self.actionOpen.triggered.connect(self.addFiles)
+        self.actionOpen.setShortcut('Ctrl+O')
+        self.actionExit.triggered.connect(self.closeEvent)
+
         self.volume.valueChanged.connect(self.volume_control)
         #self.horizontalSlider.setTickInterval(10)
         #self.horizontalSlider.setSingleStep(1)
@@ -37,6 +43,11 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.worker = UpdateGui(self.player)
         self.worker.updateProgress.connect(self.update_ui)
         self.worker.start()
+
+    def about_mm(self):
+        about = QMessageBox(self)
+        about.setFixedSize(320,240)
+        about.about(self, 'About MediaMochil', "A mediaplayer in python using PySide and Pyglet")
 
     def closeEvent(self, event):
         self.worker.terminate()
@@ -100,9 +111,9 @@ class MainWin(QMainWindow, Ui_MainWindow):
             QDesktopServices.storageLocation(QDesktopServices.MusicLocation),
             self.tr("Media Files (*.mp3 *.mp4 *.aac)")
         )
-        if files == "":
+        if not files:
             return
-        index = len(self.sources)
+        print files
 
         for mediafile in files:
             title = "unknown"

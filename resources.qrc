@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="res">
-    <file>icon.ico</file>
+  <qresource prefix="newPrefix">
+    <file>mochil_final.png</file>
   </qresource>
 </RCC>

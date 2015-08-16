@@ -18,7 +18,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/res/icon.ico</normaloff>:/res/icon.ico</iconset>
+    <normaloff>:/newPrefix/mochil_final.png</normaloff>:/newPrefix/mochil_final.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QFrame" name="frame">
@@ -224,6 +224,53 @@
     <string/>
    </property>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>558</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionRecent"/>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionRecent">
+   <property name="text">
+    <string>Recent</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="resources.qrc"/>

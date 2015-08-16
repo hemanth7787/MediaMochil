@@ -9,6 +9,8 @@ shuffle and repeat
 Table
 click select and play
 drag and drop
+move sort
+scroll to and highlight playing on table
 
 
 on linux
@@ -21,3 +23,4 @@ Finished:
 # seeking
 # Fix progress
 # Show time elapsed
+# fixed icons

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Sat Aug 08 01:45:06 2015
+# Created: Sun Aug 09 00:57:11 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
         MainWindow.setEnabled(True)
         MainWindow.resize(558, 297)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/res/icon.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/newPrefix/mochil_final.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -74,6 +74,29 @@ class Ui_MainWindow(object):
         self.statusbar.setAccessibleDescription("")
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.menuBar = QtGui.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 558, 26))
+        self.menuBar.setObjectName("menuBar")
+        self.menu_File = QtGui.QMenu(self.menuBar)
+        self.menu_File.setObjectName("menu_File")
+        self.menuHelp = QtGui.QMenu(self.menuBar)
+        self.menuHelp.setObjectName("menuHelp")
+        MainWindow.setMenuBar(self.menuBar)
+        self.actionOpen = QtGui.QAction(MainWindow)
+        self.actionOpen.setObjectName("actionOpen")
+        self.actionExit = QtGui.QAction(MainWindow)
+        self.actionExit.setObjectName("actionExit")
+        self.actionRecent = QtGui.QAction(MainWindow)
+        self.actionRecent.setObjectName("actionRecent")
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName("actionAbout")
+        self.menu_File.addAction(self.actionRecent)
+        self.menu_File.addAction(self.actionOpen)
+        self.menu_File.addSeparator()
+        self.menu_File.addAction(self.actionExit)
+        self.menuHelp.addAction(self.actionAbout)
+        self.menuBar.addAction(self.menu_File.menuAction())
+        self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -93,5 +116,11 @@ class Ui_MainWindow(object):
         self.next_item.setToolTip(QtGui.QApplication.translate("MainWindow", "Next", None, QtGui.QApplication.UnicodeUTF8))
         self.next_item.setText(QtGui.QApplication.translate("MainWindow", ">", None, QtGui.QApplication.UnicodeUTF8))
         self.play_timer.setText(QtGui.QApplication.translate("MainWindow", "00:00 / 00:00", None, QtGui.QApplication.UnicodeUTF8))
+        self.menu_File.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionRecent.setText(QtGui.QApplication.translate("MainWindow", "Recent", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionAbout.setText(QtGui.QApplication.translate("MainWindow", "About", None, QtGui.QApplication.UnicodeUTF8))
 
 import resources_rc
