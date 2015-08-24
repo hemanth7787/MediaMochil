@@ -1,16 +1,17 @@
-import time
-from PySide.QtCore import SIGNAL, Qt, QThread, Signal
-from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication, \
-    QMessageBox, qApp
-
 __author__ = 'hemanth'
 import sys
+import time
 from mochil_gui import Ui_MainWindow
-import pyglet
 from mutagen.easyid3 import EasyID3
+from PySide.QtCore import SIGNAL, Qt, QThread, Signal
+from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication, \
+    QMessageBox
+
+from PlayerEngine import PygletEngine
 
 
 class MainWin(QMainWindow, Ui_MainWindow):
+
     def __init__(self, parent=None):
         super(MainWin, self).__init__(parent)
         self.setupUi(self)
@@ -34,15 +35,36 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.connect(self.open, SIGNAL("clicked()"), self.addFiles)
         self.dw_directory = "./"
         self.sources = []
-        self.player = pyglet.media.Player()
-        self.mediaLoad = None
+        self.engine = PygletEngine()
         self.connect(self.horizontalSlider, SIGNAL("sliderReleased()"), self.seek)
-        self.connect(self.pause, SIGNAL("clicked()"), self.player.pause)
-        self.connect(self.play, SIGNAL("clicked()"), self.player.play)
-        self.connect(self.next_item, SIGNAL("clicked()"), self.player.next_source)
-        self.worker = UpdateGui(self.player)
+        self.connect(self.pause, SIGNAL("clicked()"), self.engine.pause)
+        self.connect(self.play, SIGNAL("clicked()"), self.play_action)
+        self.connect(self.next_item, SIGNAL("clicked()"), self.engine.play_next)
+        self.connect(self.previous, SIGNAL("clicked()"), self.engine.play_previous)
+        self.connect(self.stop, SIGNAL("clicked()"), self.stop_action)
+        self.worker = UpdateGui(self.engine)
         self.worker.updateProgress.connect(self.update_ui)
         self.worker.start()
+
+        self.play_list = []
+        self.current = 0
+
+    def debug_msg(self, msg):
+        if self.debug:
+            print msg
+
+    def stop_action(self):
+        self.horizontalSlider.setValue(0)
+        self.engine.stop()
+
+    def play_action(self):
+        if self.engine.play_list_is_empty():
+            self.addFiles()
+        elif self.engine.is_playing():
+            self.debug_msg("Playing")
+            pass
+        else:
+            self.engine.play()
 
     def about_mm(self):
         about = QMessageBox(self)
@@ -61,11 +83,11 @@ class MainWin(QMainWindow, Ui_MainWindow):
     def volume_control(self):
         if self.debug:
             print " volume is now " + str(self.volume.value() + 1) + "%"
-        self.player.volume = float(self.volume.value() + 1)/100
+        self.engine.set_volume(float(self.volume.value() + 1)/100)
 
     def seek(self):
-        position = self.translate(self.horizontalSlider.value(), 0.00, 99.00, 0.00, self.mediaLoad.duration)
-        self.player.seek(position)
+        position = self.translate(self.horizontalSlider.value(), 0.00, 99.00, 0.00, self.engine.get_duration())
+        self.engine.seek(position)
         if self.debug:
             print "seek " + str(position)
 
@@ -81,16 +103,16 @@ class MainWin(QMainWindow, Ui_MainWindow):
         return rightMin + (valueScaled * rightSpan)
 
     def update_ui(self, data_dict):
-        if self.mediaLoad and not self.horizontalSlider.isSliderDown():
-            progress = self.translate(data_dict["time"], 0.00, self.mediaLoad.duration, 0.00, 99.00)
+        if self.engine.is_media_loaded() and not self.horizontalSlider.isSliderDown():
+            progress = self.translate(data_dict["time"], 0.00, self.engine.get_duration(), 0.00, 99.00)
             self.horizontalSlider.setValue(progress)
             self.play_timer.setText(self.get_play_timer(data_dict["time"]))
 
     def get_play_timer(self, pos):
         play_minute = '{num:02d}'.format(num=(int(pos) / 60))
         play_seconds = '{num:02d}'.format(num=(int(pos) % 60))
-        duration_minute = '{num:02d}'.format(num=(int(self.mediaLoad.duration) / 60))
-        duration_seconds = '{num:02d}'.format(num=(int(self.mediaLoad.duration) % 60))
+        duration_minute = '{num:02d}'.format(num=(int(self.engine.get_duration()) / 60))
+        duration_seconds = '{num:02d}'.format(num=(int(self.engine.get_duration()) % 60))
         return "{}:{} / {}:{}".format(play_minute, play_seconds, duration_minute, duration_seconds)
 
     def tableClicked(self, row, column):
@@ -113,7 +135,6 @@ class MainWin(QMainWindow, Ui_MainWindow):
         )
         if not files:
             return
-        print files
 
         for mediafile in files:
             title = "unknown"
@@ -143,11 +164,9 @@ class MainWin(QMainWindow, Ui_MainWindow):
             self.musicTable.setItem(currentRow, 1, artistItem)
             self.musicTable.setItem(currentRow, 2, albumItem)
             self.musicTable.setItem(currentRow, 3, yearItem)
-        for mediafile in files:
-            self.mediaLoad = pyglet.media.load(mediafile)
-            self.player.queue(self.mediaLoad)
-        print self.mediaLoad.duration
-        self.player.play()
+        self.engine.play_list_add(files)
+
+
 
 
 
@@ -160,9 +179,9 @@ class UpdateGui(QThread):
     updateProgress = Signal(dict)
     #You can do any extra things in this init you need, but for this example
     #nothing else needs to be done expect call the super's init
-    def __init__(self,player):
+    def __init__(self,engine):
         super(UpdateGui, self).__init__()
-        self.player = player
+        self.engine = engine
 
 
     #A QThread is run by calling it's start() function, which calls this run()
@@ -173,10 +192,9 @@ class UpdateGui(QThread):
             time.sleep(1)
             self.updateProgress.emit(
                 {
-                    "time": self.player.time
+                    "time": self.engine.get_current_time()
                 })
         return
-
 
 
 app = QApplication(sys.argv)
