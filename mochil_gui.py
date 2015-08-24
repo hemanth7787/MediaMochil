@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created: Sun Aug 09 00:57:11 2015
+# Created: Mon Aug 24 20:38:26 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,7 +13,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setEnabled(True)
-        MainWindow.resize(558, 297)
+        MainWindow.resize(562, 317)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/newPrefix/mochil_final.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
         self.menuBar = QtGui.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 558, 26))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 562, 26))
         self.menuBar.setObjectName("menuBar")
         self.menu_File = QtGui.QMenu(self.menuBar)
         self.menu_File.setObjectName("menu_File")

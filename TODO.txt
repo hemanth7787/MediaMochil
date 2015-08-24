@@ -24,3 +24,5 @@ Finished:
 # Fix progress
 # Show time elapsed
 # fixed icons
+# playlist implemented inside engine
+# plugable engine

@@ -79,6 +79,10 @@ class Engine(object):
         raise NotImplementedError()
 
     @abstractmethod
+    def get_current_play_list_index(self):
+        raise NotImplementedError()
+
+    @abstractmethod
     def play_list_is_empty(self):
         raise NotImplementedError()
 
@@ -98,13 +102,10 @@ class PygletEngine(Engine):
         if self.status == self.status_types[1]:
             self.player.play()
         else:
-            source_exist = True if self.media else False
+            self.stop()
             self.load(self.get_current_play_list_item())
             self.player.queue(self.media)
-            if source_exist:
-                self.player.next_source()
-            else:
-                self.player.play()
+            self.player.play()
         if self.is_playing():
             self.status = self.status_types[2]
         else:
@@ -154,6 +155,9 @@ class PygletEngine(Engine):
     def is_playing(self):
         return self.player.playing
 
+    def is_play_list_end(self):
+        return self.current_playing == len(self.play_list)-1
+
     def play_list_add(self, plist):
         self.play_list += plist
 
@@ -166,6 +170,9 @@ class PygletEngine(Engine):
 
     def get_current_play_list_item(self):
         return self.play_list[self.current_playing]
+
+    def get_current_play_list_index(self):
+            return self.current_playing
 
     def play_list_is_empty(self):
         return self.play_list == []

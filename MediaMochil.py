@@ -5,7 +5,7 @@ from mochil_gui import Ui_MainWindow
 from mutagen.easyid3 import EasyID3
 from PySide.QtCore import SIGNAL, Qt, QThread, Signal
 from PySide.QtGui import QAbstractItemView, QMainWindow, QFileDialog, QDesktopServices, QTableWidgetItem, QApplication, \
-    QMessageBox
+    QMessageBox, QHeaderView
 
 from PlayerEngine import PygletEngine
 
@@ -21,6 +21,8 @@ class MainWin(QMainWindow, Ui_MainWindow):
         self.musicTable.setHorizontalHeaderLabels(headers)
         self.musicTable.setSelectionMode(QAbstractItemView.SingleSelection)
         self.musicTable.setSelectionBehavior(QAbstractItemView.SelectRows)
+        #  Table headers fit width
+        self.musicTable.horizontalHeader().setResizeMode(QHeaderView.Stretch)
         self.connect(self.musicTable, SIGNAL('cellPressed(int, int)'), self.tableClicked)
 
         self.actionAbout.triggered.connect(self.about_mm)
@@ -104,6 +106,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
 
     def update_ui(self, data_dict):
         if self.engine.is_media_loaded() and not self.horizontalSlider.isSliderDown():
+            self.musicTable.selectRow(self.engine.get_current_play_list_index())
             progress = self.translate(data_dict["time"], 0.00, self.engine.get_duration(), 0.00, 99.00)
             self.horizontalSlider.setValue(progress)
             self.play_timer.setText(self.get_play_timer(data_dict["time"]))
@@ -165,6 +168,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
             self.musicTable.setItem(currentRow, 2, albumItem)
             self.musicTable.setItem(currentRow, 3, yearItem)
         self.engine.play_list_add(files)
+        self.play_action()
 
 
 
@@ -190,6 +194,10 @@ class UpdateGui(QThread):
         #Notice this is the same thing you were doing in your progress() function
         while(1):
             time.sleep(1)
+            if self.engine.is_playing():
+                if int(self.engine.get_current_time()) > int(self.engine.get_duration()-2):
+                    time.sleep(2)
+                    self.engine.play_next()
             self.updateProgress.emit(
                 {
                     "time": self.engine.get_current_time()
