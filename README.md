@@ -5,7 +5,7 @@ A media player in Python using Pyglet and Pyside
 
 This is particularly for windows. It may run on some linux flavors , but with modifications mainly to the "avbin" loading part.
 
-![picture alt](http://i.imgur.com/yiEEcTY.png "Screenshot")
+![picture alt](http://i.imgur.com/koNpbfj.png "Screenshot")
 
 ## Building windows binary
 
