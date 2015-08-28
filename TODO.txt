@@ -6,6 +6,7 @@ volume always shows zero
 shuffle and repeat
 
 
+
 Table
 click select and play
 drag and drop
@@ -26,3 +27,4 @@ Finished:
 # fixed icons
 # playlist implemented inside engine
 # plugable engine
+# Volume changes on next song

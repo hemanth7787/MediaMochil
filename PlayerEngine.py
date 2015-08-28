@@ -96,6 +96,7 @@ class PygletEngine(Engine):
         self.current_playing = 0
         self.status_types = ["init", "paused", "playing", "eof"]
         self.status = self.status_types[0]
+        self.volume = 0.5
 
     def play(self):
         print self.status
@@ -103,6 +104,7 @@ class PygletEngine(Engine):
             self.player.play()
         else:
             self.stop()
+            self.set_volume(self.volume)
             self.load(self.get_current_play_list_item())
             self.player.queue(self.media)
             self.player.play()
@@ -138,6 +140,7 @@ class PygletEngine(Engine):
         self.player.seek(position)
 
     def set_volume(self, value):
+        self.volume = value
         self.player.volume = value
 
     def get_duration(self):
